@@ -1,4 +1,4 @@
-# Docker containers (nginx, mariadb, php-fpm) for Symfony 4.x
+# Docker containers (nginx, mariadb, php-fpm, maildev) for Symfony 4.x
 
 ## Table of Contents 
 - [Getting Started](#getting-started)
@@ -108,6 +108,12 @@ Then, execute these commands directly in the **php** container :
 
 The following commands must be executed directly in the **php** container.
 
+1. Update DATABASE_URL in `.env` file
+
+   ```bash
+   DATABASE_URL='mysql://symfony:pa$$w0rd@db:3306/symfony'
+   ```
+
 1. Create database schema
 
    ```bash
@@ -130,6 +136,23 @@ The following commands must be executed directly in the **php** container.
    ```
 
    You will need to remove ```-e prod``` for both command if you want to clear dev cache.
+
+---
+
+##### Access your website
+
+Modify your hosts file 
+* Linux: `/etc/hosts`
+* Windows `C:/windows/system32/drivers/etc/hosts`
+
+Add the line : 
+```
+<DOCKER_IP>    symfony.local
+```
+
+The Symfony project is now accessible at :
+- [http://192.168.99.100](http://192.168.99.100) if you are using **Docker Toolbox**
+- [http://<DOCKER_IP>]() if your are using **Docker**
 
 ---
 
@@ -161,14 +184,22 @@ The following commands must be executed directly in the **php** container.
    
    # Stop Docker
    docker-compose stop
+   
+   # Delete all containers
+   docker rm $(docker ps -aq)
+
+   # Delete all images
+   docker rmi $(docker images -q)
    ```
 1. How to get a Docker container's IP address from the host ?
 
    ```bash
    docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <service>
+   docker inspect $(docker ps -f name=<service> -q) | grep IPAddress
    ```
+
 ---
-  
+
 ## What's in the box ?
 
 ### MailDev
