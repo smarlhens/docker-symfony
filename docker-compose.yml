@@ -1,0 +1,62 @@
+version: '2'
+
+services:
+    app:
+        build:
+            context: ./symfony
+        env_file: ${SYMFONY_APP_PATH}.env
+        volumes:
+            - ${SYMFONY_APP_PATH}:/var/www/symfony
+            - vendor_data:/var/www/symfony/vendor
+            - node_modules_data:/var/www/symfony/node_modules
+            - ./logs/symfony/:/var/www/symfony/var/logs
+        tty: true
+    db:
+        image: mariadb
+        volumes:
+            - sql_data:/var/lib/mysql
+            - ./.db:/docker-entrypoint-initdb.d
+        ports:
+            - 3306:3306
+        env_file: ./.env
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    php:
+        build:
+            context: ./php
+            args:
+                TIMEZONE: ${TIMEZONE}
+        env_file: ${SYMFONY_APP_PATH}.env
+        ports:
+            - 9000:9000
+        links:
+            - db
+        volumes_from:
+            - app
+        tty: true
+    nginx:
+        build:
+            context: ./nginx
+            args:
+                PROJECT_NAME: ${PROJECT_NAME}
+        ports:
+            - 80:80
+            - 443:443
+        links:
+            - php
+        volumes_from:
+            - php
+        volumes:
+            - ./logs/nginx/:/var/log/nginx/
+    maildev:
+        image: djfarrelly/maildev
+        ports:
+            - 8000:80
+
+volumes:
+    node_modules_data:
+    sql_data:
+    vendor_data:
