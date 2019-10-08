@@ -194,8 +194,8 @@ The Symfony project is now accessible at :
 1. How to get a Docker container's IP address from the host ?
 
    ```bash
-   docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <service>
-   docker inspect $(docker ps -f name=<container> -q) | grep IPAddress
+   docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container>
+   docker inspect $(docker ps -f name=<service> -q) | grep IPAddress
    ```
 
 ---
