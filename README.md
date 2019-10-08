@@ -1,5 +1,10 @@
 # Docker containers (nginx, mariadb, php-fpm, maildev) for Symfony 4.x
 
+
+<p align="center">
+  <img src="https://github.com/smarlhens/docker-symfony/blob/symfony-4.x/doc/docker-symfony.png" width="450px" alt="docker-symfony"/>
+</p>
+
 ## Table of Contents 
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
