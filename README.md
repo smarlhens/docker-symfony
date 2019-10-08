@@ -195,15 +195,23 @@ The Symfony project is now accessible at :
 
    ```bash
    docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <service>
-   docker inspect $(docker ps -f name=<service> -q) | grep IPAddress
+   docker inspect $(docker ps -f name=<container> -q) | grep IPAddress
    ```
 
 ---
 
 ## What's in the box ?
 
+* `app` : container in which the application volume is mounted
+* `php` : php container
+* `db` : mariadb container in which the database is stored
+* `nginx` : nginx container
+* `maildev` : maildev container
+
 ### MailDev
 
-MailDev is available at [http://10.100.199.200:8000](http://10.100.199.200:8000).
+MailDev is available at :
+- [http://192.168.99.100:8000](http://192.168.99.100:8000) if you are using **Docker Toolbox**
+- [http://<DOCKER_IP>:8000]() if your are using **Docker**
 
 _Documentation : [MailDev docs](https://danfarrelly.nyc/MailDev/)_
