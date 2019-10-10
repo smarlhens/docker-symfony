@@ -9,7 +9,7 @@ services:
             - ${SYMFONY_APP_PATH}:/var/www/symfony
             - vendor_data:/var/www/symfony/vendor
             - node_modules_data:/var/www/symfony/node_modules
-            - ./logs/symfony/:/var/www/symfony/var/logs
+            - ./logs/symfony/:/var/www/symfony/var/logs/
         tty: true
     db:
         image: mariadb
