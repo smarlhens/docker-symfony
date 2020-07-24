@@ -1,21 +1,13 @@
-FROM debian:jessie
+FROM nginx
 
 MAINTAINER Samuel MARLHENS <samuel.marlhens@gmail.com>
 
 ARG PROJECT_NAME
 
-RUN sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list
-RUN apt-get -o Acquire::Check-Valid-Until=false update
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY symfony.conf /etc/nginx/conf.d/default.conf
 
-RUN apt-get install -y nginx
-
-ADD nginx.conf /etc/nginx/
-ADD symfony.conf /etc/nginx/sites-available/
-
-RUN sed -i s/"symfony.local"/"${PROJECT_NAME}.local"/g /etc/nginx/sites-available/symfony.conf
-
-RUN ln -s /etc/nginx/sites-available/symfony.conf /etc/nginx/sites-enabled/symfony
-RUN rm /etc/nginx/sites-enabled/default
+RUN sed -i s/"symfony.local"/"${PROJECT_NAME}.local"/g /etc/nginx/conf.d/default.conf
 
 RUN echo "upstream php-upstream { server php:9000; }" > /etc/nginx/conf.d/upstream.conf
 
