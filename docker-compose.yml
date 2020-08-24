@@ -10,6 +10,8 @@ services:
             - vendor_data:/var/www/symfony/vendor
             - ./logs/symfony/:/var/www/symfony/var/logs/
         tty: true
+        networks:
+            - symfony
     db:
         image: mariadb
         volumes:
@@ -17,6 +19,8 @@ services:
             - ./.db:/docker-entrypoint-initdb.d/:ro
         ports:
             - 3306:3306
+        networks:
+            - symfony
         env_file: ./.env
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -31,8 +35,11 @@ services:
         env_file: ${SYMFONY_APP_PATH}.env
         ports:
             - 9000:9000
-        links:
-            - db:mysql
+        networks:
+            - symfony
+        depends_on:
+            - app
+            - db
         volumes_from:
             - app
         tty: true
@@ -44,7 +51,9 @@ services:
         ports:
             - 80:80
             - 443:443
-        links:
+        networks:
+            - symfony
+        depends_on:
             - php
         volumes_from:
             - php
@@ -54,7 +63,12 @@ services:
         image: djfarrelly/maildev
         ports:
             - 8000:80
+        networks:
+            - symfony
 
 volumes:
     sql_data:
     vendor_data:
+
+networks:
+    symfony:
